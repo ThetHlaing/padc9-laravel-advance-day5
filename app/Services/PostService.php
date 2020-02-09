@@ -16,6 +16,10 @@ class PostService
         $data['author_id'] = \Auth::user()->id;
         $post = Post::create($data);
 
+        if(!$post->is_published){
+            $post->unsearchable();
+        }
+
         Cache::forever('post.' . $post->id, $post);
 
         Mail::to('th.ucsy@gmail.com')->send(
@@ -28,6 +32,10 @@ class PostService
     public function update($data, $post)
     {
         $post->update($data);
+
+        if(!$post->is_published){
+            $post->unsearchable();
+        }
 
         Cache::forever('post.' . $post->id, $post);
 

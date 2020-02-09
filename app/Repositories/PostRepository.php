@@ -33,8 +33,8 @@ class PostRepository
 
     public function searchPost($keyword)
     {
-        return Post::published()
-            ->search($keyword)
+        // return Post::published()
+        return Post::search($keyword)
             ->paginate(5);
     }
 

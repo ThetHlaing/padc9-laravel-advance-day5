@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
+
+    use Searchable;
     protected $fillable = ['title', 'content', 'is_published', 'author_id'];
 
     public function author()
@@ -34,9 +37,10 @@ class Post extends Model
         return $query->orderByDesc('created_at');
     }
 
-    public function scopeSearch($query, $keyword)
-    {
-        return $query->where('title', 'like', '%' . $keyword . '%')
-            ->orwhere('content', 'like', '%' . $keyword . '%');
-    }
+    // public function scopeSearch($query, $keyword)
+    // {
+    //     return $query->whereRaw('match(title,content) against (?)',$keyword);
+    //     // return $query->where('title', 'like', '%' . $keyword . '%')
+    //     //     ->orwhere('content', 'like', '%' . $keyword . '%');
+    // }
 }
