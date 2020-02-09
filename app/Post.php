@@ -33,4 +33,10 @@ class Post extends Model
     {
         return $query->orderByDesc('created_at');
     }
+
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('title', 'like', '%' . $keyword . '%')
+            ->orwhere('content', 'like', '%' . $keyword . '%');
+    }
 }

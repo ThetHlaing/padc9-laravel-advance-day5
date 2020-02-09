@@ -27,16 +27,16 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('query')){
+        if ($request->has('keyword')) {
             //Search here
-        }
-
-        if (auth()->guest()) {
-            $posts = $this->repository->guestPost();
+            $posts = $this->repository->searchPost($request->keyword);
         } else {
-            $posts = $this->repository->memberPost();
+            if (auth()->guest()) {
+                $posts = $this->repository->guestPost();
+            } else {
+                $posts = $this->repository->memberPost();
+            }
         }
-
         return view('post.index', compact('posts'));
 
     }
@@ -92,7 +92,7 @@ class PostController extends Controller
     {
         $post = $this->repository->find($post);
         $this->authorize('update', $post);
-        return view('post.edit',compact('post'));
+        return view('post.edit', compact('post'));
     }
 
     /**
@@ -107,11 +107,11 @@ class PostController extends Controller
     {
         $post = $this->repository->find($post);
         $this->authorize('update', $post);
-       
-        $this->service->update($request->validated(),$post);
+
+        $this->service->update($request->validated(), $post);
 
         // $this->notifyAdminViaSlack("This message will send to admin");
-        return redirect()->route('post.show',$post->id);
+        return redirect()->route('post.show', $post->id);
     }
 
     /**
